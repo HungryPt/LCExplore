@@ -40,25 +40,103 @@ public class LCArray {
      * 你可以假设 nums1 和 nums2 不会同时为空。[1,3,4,5] [1,2,3,4]
      * @Date:
      **/
-    public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        List<Integer> list = new ArrayList();
-        for (int i = 0; i < nums1.length; i++) {
-            for (int j = 0; j < nums2.length-i; j++) {
-                if (nums1[i]>=nums2[j]){
-                    list.add(nums2[j]);
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        int l = l1+l2;
+        if((l&0x01)==0){//中位数为两数之平均数的情况
+            int index1 = l/2;
+            int index2 = l/2-1;
+            int sum1=0;
+            int sum2=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i<l1||j<l2){
+                if(i>=l1){
+                    if(x==index1){
+                        sum1=nums2[j];
+                    }
+                    if(x==index2){
+                        sum2=nums2[j];
+                    }
+
+                    j++;
+                }else if(j>=l2){
+                    if(x==index1){
+                        sum1=nums1[i];
+                    }
+                    if(x==index2){
+                        sum2=nums1[i];
+                    }
+
+                    i++;
                 }
+                else if(nums1[i]<nums2[j]){
+                    if(x==index1){
+                        sum1=nums1[i];
+                    }
+                    if(x==index2){
+                        sum2=nums1[i];
+                    }
+                    i++;
+                }
+                else {
+                    if(x==index1){
+                        sum1=nums2[j];
+                    }
+                    if(x==index2){
+                        sum2=nums2[j];
+                    }
+                    j++;
+                }
+                x++;
             }
+            return (sum1+sum2)/2.0;
+        }else{//中位数为一个数的情况
+            int index = l/2;
+            int sum=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i<l1||j<l2){
+                if(i>=l1){
 
-            list.add(nums1[i]);
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }else if(j>=l2){
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+                }
+                else if(nums1[i]<nums2[j]){
+
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+
+                }
+                else {
+
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }
+                x++;
+            }
+            return sum;
+
         }
-
-        return 3.5;
     }
-
-    public static void main(String[] args) {
-        int[] x = new int[]{1,2,3,4};
-        int[] y = new int[]{2,3,4};
-        findMedianSortedArrays(x,y);
-    }
-
 }

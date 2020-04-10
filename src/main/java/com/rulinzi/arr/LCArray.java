@@ -1,6 +1,8 @@
 package com.rulinzi.arr;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +92,9 @@ public class LCArray {
                     }
                     j++;
                 }
+                if(sum1!=0&&sum2!=0){
+                    break;
+                }
                 x++;
             }
             return (sum1+sum2)/2.0;
@@ -138,5 +143,79 @@ public class LCArray {
             return sum;
 
         }
+    }
+    /**
+     * @Description: 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。 "babad"
+     **/
+    public static String longestPalindrome(String s) {
+        if(s.equals("")){
+            return "";
+        }
+        int length=s.length();
+        //dp[i][j]表示第i到第j的子串是否为回文子串
+        boolean[][]dp=new boolean[length][length];
+        for(int i=0;i<length;i++){
+            dp[i][i]=true;
+        }
+        int start=0;
+        int max_len=1;
+        //先遍历列，再遍历行，否则会出错
+        for(int j=0;j<length;j++){
+            for(int i=0;i<length;i++){
+                if(i>=j){
+                    continue;
+                }
+                if(i+1==j&&s.charAt(i)==s.charAt(j)){
+                    dp[i][j]=true;
+                }else{
+                    dp[i][j]=dp[i+1][j-1]&&s.charAt(i)==s.charAt(j);
+                }
+                if(dp[i][j]&&j-i+1>max_len){
+                    max_len=j-i+1;
+                    start=i;
+                }
+
+            }
+        }
+        String res=new String(s.toCharArray(),start,max_len);
+        return res;
+    }
+    public static String longestPalindrome2(String s) {
+        if(s == null || s.length() == 0) {
+            return "" ;
+        }
+        int n = s.length() ;
+        boolean[][] isPalindrome = new boolean[n][n] ;
+        char[] ss = s.toCharArray() ;
+        String ans = "" ;
+        for(int i = 0 ; i < n ; i++){
+            isPalindrome[i][i] = true ;//长度为1，一定是回文子串，记为true
+            ans = s.substring(i,i+1) ;
+        }
+        for(int i = 0 ; i < n - 1 ; i++){
+            if(ss[i] == ss[i+1]){//长度为2时，两个字符相同，为回文子串，记为true
+                isPalindrome[i][i+1] = true ;
+                ans = s.substring(i,i+2) ;
+            }
+        }
+        for(int j = 3 ; j <= n ; j++) {//长度从3开始依次递增
+            for (int i = 0; i + j - 1 < n; i++) {
+                if (ss[i] == ss[i + j - 1] && isPalindrome[i + 1][i + j - 2]) {//始末位置字符相同且中间位置字符串为回文子串时，该字符串回文
+                    isPalindrome[i][i + j - 1] = true;
+                    if (j > ans.length()) {
+                        ans = s.substring(i, i + j);
+                    }
+                }
+            }
+        }
+        return ans ;
+
+    }
+
+
+
+
+    public static void main(String[] args) {
+        System.out.println(longestPalindrome2("babad"));
     }
 }
